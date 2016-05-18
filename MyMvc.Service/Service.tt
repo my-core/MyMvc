@@ -1,0 +1,45 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ include file="$(ProjectDir)DbHelper.ttinclude"  #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using MyMvc.Model;
+using MyMvc.IService;
+namespace MyMvc.Service
+{
+	#region IService接口
+	<# foreach(DbTable t in DbHelper.GetDbTables(config.ConnectionString, config.DbDatabase, null))
+	{
+		string tableName=t.TableName.Replace("T_","");
+	#>
+
+    /// <summary>
+    /// <#=tableName #>Service
+    /// </summary>
+	public partial class <#=tableName #>Service : BaseService<<#=tableName #>Model>, I<#=tableName #>Service
+	{
+	}
+	<#}#> 
+	#endregion
+    
+
+}
+<#+
+    public class config
+    {
+        public static readonly string ConnectionString="Data Source=localhost;Initial Catalog=MyMvc;User ID=sa;Password=123;";
+        public static readonly string DbDatabase="MyMvc";
+    }
+#>
